@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import vboyko.gb.libs.lesson1.databinding.FragmentUsersBinding
@@ -15,7 +16,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val presenter: UsersPresenter by moxyPresenter {
-        UsersPresenter(GithubUsersRepo(), App.instance.router)
+        UsersPresenter(App.instance.repository, App.instance.router)
     }
     var adapter: UsersRVAdapter? = null
     private var vb: FragmentUsersBinding? = null
@@ -38,6 +39,13 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
             this.rvUsers.layoutManager = LinearLayoutManager(context)
             adapter = UsersRVAdapter(presenter.usersListPresenter)
             this.rvUsers.adapter = adapter
+        }
+
+        vb?.image?.run {
+            Glide.with(this)
+                .load("https://news102.ru/wp-content/uploads/2020/07/july.png")
+                .placeholder(R.drawable.ic_launcher_foreground_2)
+                .into(this)
         }
 
 

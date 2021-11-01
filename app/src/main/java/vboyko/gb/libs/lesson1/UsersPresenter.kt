@@ -1,11 +1,14 @@
 package vboyko.gb.libs.lesson1
 
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpPresenter
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPresenter<UsersView>() {
+class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
+    MvpPresenter<UsersView>() {
     class UsersListPresenter : IUserListPresenter {
-        val users = mutableListOf<GithubUser>()
+
+        val users = (1..20).map { GithubUser("login $it") }.toMutableList()
 
         override var itemClickListener: ((UserItemView) -> Unit)? = null
         override fun getCount() = users.size
@@ -17,22 +20,29 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
 
     val usersListPresenter = UsersListPresenter()
 
+    private val disposable = usersRepo.getUsers2()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+            usersListPresenter.users.clear()
+            usersListPresenter.users.addAll(it)
+            viewState.updateList()
+        }
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        loadData()
         usersListPresenter.itemClickListener = { itemView ->
 //TODO: переход на экран пользователя
         }
     }
 
-    fun loadData() {
-        val users = usersRepo.getUsers()
-        usersListPresenter.users.addAll(users)
-        viewState.updateList()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
-    fun backPressed(): Boolean{
+
+    fun backPressed(): Boolean {
         router.exit()
         return true
     }

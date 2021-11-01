@@ -1,10 +1,10 @@
 package vboyko.gb.libs.lesson1
 
-class GithubUsersRepo {
-    private val repositories =
-        (0..100).map { GithubUser("login $it") }
+import io.reactivex.rxjava3.core.Observable
 
-    fun getUsers(): List<GithubUser> {
-        return repositories
-    }
+class GithubUsersRepo {
+
+    private val client = RetrofitKeeper().api
+
+    fun getUsers2(): Observable<List<GithubUser>> = client.loadUsers().toObservable()
 }
