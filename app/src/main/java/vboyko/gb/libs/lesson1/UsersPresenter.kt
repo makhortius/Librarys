@@ -1,5 +1,6 @@
 package vboyko.gb.libs.lesson1
 
+import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpPresenter
@@ -8,7 +9,7 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
     MvpPresenter<UsersView>() {
     class UsersListPresenter : IUserListPresenter {
 
-        val users = (1..20).map { GithubUser("login $it") }.toMutableList()
+        val users = (1..20).map { GithubUser("login $it", 0) }.toMutableList()
 
         override var itemClickListener: ((UserItemView) -> Unit)? = null
         override fun getCount() = users.size
@@ -20,17 +21,20 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
 
     val usersListPresenter = UsersListPresenter()
 
-    private val disposable = usersRepo.getUsers2()
+    private val disposable = usersRepo.subscribeOnGithubUsersData()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
+        .subscribe({
             usersListPresenter.users.clear()
             usersListPresenter.users.addAll(it)
             viewState.updateList()
-        }
+        }, {
+            Log.e("GB_LIBS", it.message, it)
+        })
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
+        usersRepo.loadUserData()
         usersListPresenter.itemClickListener = { itemView ->
 //TODO: переход на экран пользователя
         }
