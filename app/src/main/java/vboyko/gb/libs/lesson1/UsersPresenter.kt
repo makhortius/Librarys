@@ -8,9 +8,9 @@ import javax.inject.Inject
 
 class UsersPresenter @Inject constructor(
     private val usersRepo: GithubUsersRepo,
-    private val router: Router
-) :
-    MvpPresenter<UsersView>() {
+    private val router: Router,
+    private val screens: IScreens
+) : MvpPresenter<UsersView>() {
 
     init {
         App.instance.appComponent.inject(this)
@@ -21,7 +21,11 @@ class UsersPresenter @Inject constructor(
 
         val users = (1..20).map { GithubUser("login $it", 0) }.toMutableList()
 
-        override var itemClickListener: ((UserItemView) -> Unit)? = null
+        override fun getUserByPosition(position: Int): GithubUser {
+            return users[position]
+        }
+
+        override var itemClickListener: ((UserItemView, GithubUser) -> Unit)? = null
         override fun getCount() = users.size
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
@@ -45,8 +49,13 @@ class UsersPresenter @Inject constructor(
         super.onFirstViewAttach()
         viewState.init()
         usersRepo.loadUserData()
-        usersListPresenter.itemClickListener = { itemView ->
-//TODO: переход на экран пользователя
+        usersListPresenter.itemClickListener = { _, user ->
+            router.navigateTo(
+                screens.oneUser(
+                    userAvatarUrl = user.avatarUrl,
+                    userName = user.login
+                )
+            )
         }
     }
 

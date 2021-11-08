@@ -3,6 +3,7 @@ package vboyko.gb.libs.lesson1.di
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
@@ -69,11 +70,13 @@ class ApiModule {
     @Provides
     fun api(
         @Named("baseUrl") baseUrl: String,
-        gson: Gson
+        gson: Gson,
+        app: App
     ): GitHub = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(
             OkHttpClient.Builder()
+                .addNetworkInterceptor(ChuckerInterceptor(app))
                 .addNetworkInterceptor(StethoInterceptor())
                 .build()
         )
@@ -131,6 +134,8 @@ interface AppComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(mainPresenter: MainPresenter)
     fun inject(usersPresenter: UsersPresenter)
+    fun inject(usersPresenter: OneUserPresenter)
     fun inject(usersFragment: UsersFragment)
+    fun inject(usersFragment: OneUserFragment)
 
 }
