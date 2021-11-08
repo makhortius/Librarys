@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import vboyko.gb.libs.lesson1.databinding.FragmentUsersBinding
+import javax.inject.Inject
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     companion object {
@@ -17,10 +18,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         }
     }
 
+    @Inject
+    lateinit var somePresenter: UsersPresenter
+
     val presenter: UsersPresenter by moxyPresenter {
-        UsersPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+        somePresenter
     }
 
     var adapter: UsersRVAdapter? = null

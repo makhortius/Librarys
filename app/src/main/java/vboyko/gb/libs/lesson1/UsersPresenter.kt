@@ -6,15 +6,16 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpPresenter
 import javax.inject.Inject
 
-class UsersPresenter :
+class UsersPresenter @Inject constructor(
+    private val usersRepo: GithubUsersRepo,
+    private val router: Router
+) :
     MvpPresenter<UsersView>() {
 
     init {
         App.instance.appComponent.inject(this)
     }
 
-    @Inject lateinit var usersRepo: GithubUsersRepo
-    @Inject lateinit var router: Router
 
     class UsersListPresenter : IUserListPresenter {
 
