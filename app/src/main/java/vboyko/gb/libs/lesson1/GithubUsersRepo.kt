@@ -6,10 +6,11 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import vboyko.gb.libs.lesson1.database.User
 import vboyko.gb.libs.lesson1.database.UserDao
 
-class GithubUsersRepo {
+class GithubUsersRepo(
+    val client: GitHub,
+    val db: UserDao
+) {
 
-    private val db: UserDao by lazy { App.instance.getDB().userDao() }
-    private val client = RetrofitKeeper().api
     private val bs = BehaviorSubject.create<Unit>()
 
     fun subscribeOnGithubUsersData(): Observable<List<GithubUser>> {

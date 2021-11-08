@@ -12,12 +12,17 @@ import vboyko.gb.libs.lesson1.databinding.FragmentUsersBinding
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     companion object {
-        fun newInstance() = UsersFragment()
+        fun newInstance() = UsersFragment().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     val presenter: UsersPresenter by moxyPresenter {
-        UsersPresenter(App.instance.repository, App.instance.router)
+        UsersPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
+
     var adapter: UsersRVAdapter? = null
     private var vb: FragmentUsersBinding? = null
 
