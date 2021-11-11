@@ -77,6 +77,11 @@ val cacheModule = module {
             database.execSQL("ALTER TABLE User ADD COLUMN age INTEGER DEFAULT 0 NOT NULL")
         }
     }
+    val migration2 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("""CREATE TABLE t21 ( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT)""")
+        }
+    }
 
     single<AppDatabase> {
         Room.databaseBuilder(
@@ -84,7 +89,7 @@ val cacheModule = module {
             AppDatabase::class.java,
             "gb-libs.db"
         )
-            .addMigrations(migrations)
+            .addMigrations(migrations, migration2)
             .build()
     }
     single<UserDao> { get<AppDatabase>().userDao() }

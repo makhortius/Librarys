@@ -10,6 +10,14 @@ data class User(
     @ColumnInfo(name = "age") val age: Int = 0,
 )
 
+@Entity(tableName = "t21")
+data class Gift(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val uid: Int,
+    @ColumnInfo(name = "title") val titleOfGift: String?,
+)
+
 
 @Dao
 interface UserDao {
@@ -29,9 +37,10 @@ interface UserDao {
 
 @Database(
     entities = [
-        User::class
+        User::class,
+        Gift::class
     ],
-    version = 2
+    version = 3
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
