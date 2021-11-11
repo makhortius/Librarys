@@ -2,17 +2,14 @@ package vboyko.gb.libs.lesson1
 
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
-import javax.inject.Inject
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-class OneUserPresenter @Inject constructor(
+class OneUserPresenter constructor(
     private val router: Router,
     private val screens: IScreens,
 ) :
     MvpPresenter<OneUserView>() {
-
-    init {
-        App.instance.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -25,6 +22,11 @@ class OneUserPresenter @Inject constructor(
     }
 
     fun updateUserInfo(userName: String, userAvatarUrl: String) {
+        val list = listOf(
+            module {
+                single(named("test55")) { "hello from runtime" }
+            }
+        )
         viewState.updateUserData(userName, userAvatarUrl)
     }
 }

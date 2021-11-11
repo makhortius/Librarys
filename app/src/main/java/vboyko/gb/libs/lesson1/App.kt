@@ -2,24 +2,20 @@ package vboyko.gb.libs.lesson1
 
 import android.app.Application
 import com.facebook.stetho.Stetho
-import vboyko.gb.libs.lesson1.di.AppComponent
-import vboyko.gb.libs.lesson1.di.AppModule
-import vboyko.gb.libs.lesson1.di.DaggerAppComponent
+import org.koin.core.KoinApplication
+import vboyko.gb.libs.lesson1.di.startKoinApp
 
 class App : Application() {
 
     companion object {
         lateinit var instance: App
+        lateinit var koinApp: KoinApplication
     }
-
-    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        appComponent = DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .build()
+        koinApp = startKoinApp(instance)
         Stetho.initializeWithDefaults(this)
     }
 }

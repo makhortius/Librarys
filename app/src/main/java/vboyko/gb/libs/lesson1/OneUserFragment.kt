@@ -7,10 +7,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import vboyko.gb.libs.lesson1.databinding.FragmentOneUserBinding
-import javax.inject.Inject
 
-class OneUserFragment : MvpAppCompatFragment(), OneUserView, BackButtonListener {
+class OneUserFragment : MvpAppCompatFragment(), OneUserView, BackButtonListener, KoinComponent {
     companion object {
 
         private const val USER_NAME = "userName"
@@ -22,12 +23,10 @@ class OneUserFragment : MvpAppCompatFragment(), OneUserView, BackButtonListener 
                     this.putString(USER_NAME, userName)
                     this.putString(USER_AVATAR_URL, userAvatarUrl)
                 }
-                App.instance.appComponent.inject(this)
             }
     }
 
-    @Inject
-    lateinit var somePresenter: OneUserPresenter
+    private val somePresenter: OneUserPresenter by inject()
 
     private val presenter: OneUserPresenter by moxyPresenter {
         somePresenter

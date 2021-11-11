@@ -4,18 +4,12 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpPresenter
-import javax.inject.Inject
 
-class UsersPresenter @Inject constructor(
+class UsersPresenter constructor(
     private val usersRepo: GithubUsersRepo,
     private val router: Router,
     private val screens: IScreens
 ) : MvpPresenter<UsersView>() {
-
-    init {
-        App.instance.appComponent.inject(this)
-    }
-
 
     class UsersListPresenter : IUserListPresenter {
 

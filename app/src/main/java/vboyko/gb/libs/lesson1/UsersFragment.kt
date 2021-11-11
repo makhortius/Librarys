@@ -8,18 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import vboyko.gb.libs.lesson1.databinding.FragmentUsersBinding
-import javax.inject.Inject
 
-class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
+class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener, KoinComponent {
     companion object {
-        fun newInstance() = UsersFragment().apply {
-            App.instance.appComponent.inject(this)
-        }
+        fun newInstance() = UsersFragment()
     }
 
-    @Inject
-    lateinit var somePresenter: UsersPresenter
+    private val somePresenter: UsersPresenter by inject()
 
     val presenter: UsersPresenter by moxyPresenter {
         somePresenter

@@ -3,15 +3,14 @@ package vboyko.gb.libs.lesson1
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import moxy.MvpPresenter
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class MainPresenter() : MvpPresenter<MainView>() {
+class MainPresenter() : MvpPresenter<MainView>(), KoinComponent {
 
-    @Inject
-    lateinit var router: Router
+    private val router: Router by inject()
 
-    @Inject
-    lateinit var screen: IScreens
+    private val screen: IScreens by inject()
 
     private val behaviorSubject = BehaviorSubject.create<TypeB>()
 

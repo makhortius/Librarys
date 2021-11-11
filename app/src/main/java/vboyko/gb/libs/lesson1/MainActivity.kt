@@ -5,24 +5,21 @@ import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
+import org.koin.android.ext.android.inject
 import vboyko.gb.libs.lesson1.databinding.ActivityMainBinding
-import javax.inject.Inject
 
 class MainActivity : MvpAppCompatActivity(), MainView {
 
-    @Inject lateinit var navigatorHolder: NavigatorHolder
+    private val navigatorHolder: NavigatorHolder by inject()
 
     private val navigator = AppNavigator(this, R.id.container)
 
-    private val presenter by moxyPresenter { MainPresenter().apply {
-        App.instance.appComponent.inject(this)
-    } }
+    private val presenter by moxyPresenter { MainPresenter() }
 
     private var vb: ActivityMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.instance.appComponent.inject(this)
         vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb?.root)
     }
